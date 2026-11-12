@@ -42,7 +42,7 @@
             top: 0;
             left: 0;
             width: 100%;
-            background: rgba(13, 17, 23, 0.95);
+            background: rgba(13, 17, 23, 0.98);
             backdrop-filter: blur(10px);
             display: flex;
             justify-content: space-between;
@@ -95,8 +95,10 @@
         .menu-toggle {
             display: none;
             cursor: pointer;
-            font-size: 1.5rem;
+            font-size: 1.6rem;
             color: var(--text-heading);
+            background: none;
+            border: none;
         }
 
         /* Hero Section */
@@ -433,7 +435,7 @@
             display: none;
             justify-content: center;
             align-items: center;
-            z-index: 9999;
+            z-index: 99999;
             padding: 20px;
         }
 
@@ -462,19 +464,25 @@
                 display: block;
             }
             nav ul {
-                position: absolute;
+                position: fixed;
                 top: 70px;
-                left: 0;
+                left: -100%;
                 width: 100%;
+                height: calc(100vh - 70px);
                 background: rgba(13, 17, 23, 0.98);
                 flex-direction: column;
+                justify-content: center;
                 align-items: center;
-                padding: 20px 0;
-                border-bottom: 1px solid var(--border-color);
-                display: none;
+                gap: 30px;
+                transition: 0.3s ease-in-out;
+                border-top: 1px solid var(--border-color);
+                z-index: 999;
             }
             nav ul.active {
-                display: flex;
+                left: 0;
+            }
+            nav ul li a {
+                font-size: 1.2rem;
             }
             .hero {
                 flex-direction: column;
@@ -495,14 +503,14 @@
     <!-- Header -->
     <header>
         <div class="logo">devloperlab<span>.in</span></div>
-        <div class="menu-toggle" onclick="toggleMenu()">
+        <button class="menu-toggle" id="menuToggleBtn">
             <i class="fas fa-bars" id="menu-icon"></i>
-        </div>
+        </button>
         <nav>
             <ul id="nav-links">
-                <li><a href="#about" onclick="toggleMenu()">About</a></li>
-                <li><a href="#projects" onclick="toggleMenu()">Projects & Proofs</a></li>
-                <li><a href="#contact" onclick="toggleMenu()">Contact</a></li>
+                <li><a href="#about" class="nav-link-item">About</a></li>
+                <li><a href="#projects" class="nav-link-item">Projects & Proofs</a></li>
+                <li><a href="#contact" class="nav-link-item">Contact</a></li>
                 <li><a id="adminBtn" class="admin-nav-btn"><i class="fas fa-lock"></i> Admin</a></li>
             </ul>
         </nav>
@@ -624,13 +632,240 @@
                         <label><i class="fab fa-whatsapp"></i> WhatsApp Link</label>
                         <input type="url" id="soc-wp" required>
                     </div>
-                    <div class="admin-form-group">
-                        <label><i class="fab fa-github"></i> GitHub Link</label>
-                        <input type="url" id="soc-gh" required>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Save Social Handlers</button>
-                </form>
+            <div class="admin-form-group">
+        <label><i class="fab fa-github"></i> GitHub Link</label>
+        <input type="url" id="soc-gh" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Save Social Handlers</button>
+</form>
             </div>
         </div>
 
-        <!-- Dynamic Proje
+        <!-- Dynamic Projects Grid -->
+        <div class="projects-grid" id="projects-container"></div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact">
+        <div class="contact-container">
+            <h2 class="section-title">Let's Build <span>Together</span></h2>
+            <p>Ready to deploy a custom Python bot or edit high-retention content under <b>devloperlab.in</b>? Reach out directly!</p>
+            <a href="#" id="contact-email-btn" class="btn btn-primary"><i class="fas fa-envelope"></i> Send an Email</a>
+            
+            <div class="social-icons" id="social-icons-container"></div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2026 devloperlab.in. All rights reserved.</p>
+    </footer>
+
+    <!-- Login Modal -->
+    <div class="login-overlay" id="loginModal">
+        <div class="login-box">
+            <h3>🔐 Admin Authentication</h3>
+            <form onsubmit="verifyAdminLogin(event)">
+                <div class="admin-form-group">
+                    <label>Admin Passcode</label>
+                    <input type="password" id="adminPasscode" placeholder="Enter admin passcode" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Login to Admin</button>
+                <button type="button" class="btn btn-secondary" onclick="closeLoginModal()" style="width: 100%; margin-top: 10px;">Cancel</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        const ADMIN_PASSCODE = "admin123";
+
+        let defaultProjects = [
+            {
+                tag: "Python / Telegram Bot",
+                title: "Escrow Management Bot v2",
+                desc: "A fully secure automated crypto escrow bot running 24/7 with database integration.",
+                link: "https://t.me/"
+            },
+            {
+                tag: "Video Editing",
+                title: "Cinematic Travel Reels Pack",
+                desc: "High-retention social media video edits featuring seamless transitions and sound design.",
+                link: "https://instagram.com/"
+            }
+        ];
+
+        let defaultSocials = {
+            tg: "https://t.me/yourusername",
+            ig: "https://instagram.com/yourusername",
+            wp: "https://wa.me/910000000000",
+            gh: "https://github.com/yourusername"
+        };
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const menuToggleBtn = document.getElementById('menuToggleBtn');
+            const navLinks = document.getElementById('nav-links');
+            
+            if(menuToggleBtn && navLinks) {
+                menuToggleBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    navLinks.classList.toggle('active');
+                    const icon = document.getElementById('menu-icon');
+                    if(navLinks.classList.contains('active')) {
+                        icon.classList.remove('fa-bars');
+                        icon.classList.add('fa-times');
+                    } else {
+                        icon.classList.remove('fa-times');
+                        icon.classList.add('fa-bars');
+                    }
+                });
+
+                document.querySelectorAll('.nav-link-item').forEach(item => {
+                    item.addEventListener('click', () => {
+                        navLinks.classList.remove('active');
+                        document.getElementById('menu-icon').classList.remove('fa-times');
+                        document.getElementById('menu-icon').classList.add('fa-bars');
+                    });
+                });
+            }
+
+            const adminBtn = document.getElementById('adminBtn');
+            if(adminBtn) {
+                adminBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    if(navLinks) navLinks.classList.remove('active');
+                    openLoginModal();
+                });
+            }
+
+            renderProjects();
+            updateStatsUI();
+            renderSocials();
+        });
+
+        function openLoginModal() {
+            const modal = document.getElementById('loginModal');
+            if(modal) {
+                modal.style.display = 'flex';
+            }
+        }
+
+        function closeLoginModal() {
+            const modal = document.getElementById('loginModal');
+            if(modal) {
+                modal.style.display = 'none';
+                document.getElementById('adminPasscode').value = '';
+            }
+        }
+
+        function verifyAdminLogin(event) {
+            event.preventDefault();
+            const enteredPass = document.getElementById('adminPasscode').value;
+            if (enteredPass === ADMIN_PASSCODE) {
+                closeLoginModal();
+                document.getElementById('admin-panel').style.display = 'block';
+                alert('Login Successful! Welcome to the Admin Dashboard.');
+                window.location.hash = '#projects';
+                renderProjects();
+            } else {
+                alert('Incorrect Passcode! Access Denied.');
+            }
+        }
+
+        function closeAdminPanel() {
+            document.getElementById('admin-panel').style.display = 'none';
+            renderProjects();
+        }
+
+        function switchTab(tabId, event) {
+            document.querySelectorAll('.admin-tab-content').forEach(el => el.style.display = 'none');
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            document.getElementById(tabId).style.display = 'block';
+            if (event) event.currentTarget.classList.add('active');
+        }
+
+        function renderProjects() {
+            let projects = JSON.parse(localStorage.getItem('dev_projects')) || defaultProjects;
+            let container = document.getElementById('projects-container');
+            if(!container) return;
+            container.innerHTML = '';
+
+            let isAdminOpen = document.getElementById('admin-panel').style.display === 'block';
+
+            projects.forEach((p, index) => {
+                container.innerHTML += `
+                    <div class="project-card">
+                        <div class="project-info">
+                            <span class="project-tag">${p.tag}</span>
+                            <h3>${p.title}</h3>
+                            <p>${p.desc}</p>
+                        </div>
+                        <div class="project-footer">
+                            <a href="${p.link}" target="_blank">View Proof / Live <i class="fas fa-external-link-alt"></i></a>
+                            ${isAdminOpen ? `<button onclick="deleteProject(${index})" class="btn btn-secondary" style="padding: 4px 10px; font-size: 0.8rem; border-color: #ff5722; color: #ff5722;">Delete</button>` : ''}
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function handleAddNewProject(event) {
+            event.preventDefault();
+            let newProj = {
+                tag: document.getElementById('p-tag').value,
+                title: document.getElementById('p-title').value,
+                desc: document.getElementById('p-desc').value,
+                link: document.getElementById('p-link').value
+            };
+
+            let projects = JSON.parse(localStorage.getItem('dev_projects')) || defaultProjects;
+            projects.unshift(newProj);
+            localStorage.setItem('dev_projects', JSON.stringify(projects));
+            
+            alert('Project & Proof published successfully!');
+            document.getElementById('add-project-form').reset();
+            renderProjects();
+        }
+
+        function deleteProject(index) {
+            let projects = JSON.parse(localStorage.getItem('dev_projects')) || defaultProjects;
+            projects.splice(index, 1);
+            localStorage.setItem('dev_projects', JSON.stringify(projects));
+            renderProjects();
+        }
+
+        function handleUpdateStats(event) {
+            event.preventDefault();
+            let stats = {
+                projects: document.getElementById('stat-p-input').value,
+                clients: document.getElementById('stat-c-input').value,
+                edits: document.getElementById('stat-e-input').value,
+                uptime: document.getElementById('stat-u-input').value
+            };
+            localStorage.setItem('dev_stats', JSON.stringify(stats));
+            updateStatsUI();
+            alert('Stats updated successfully!');
+        }
+
+        function updateStatsUI() {
+            let stats = JSON.parse(localStorage.getItem('dev_stats')) || { projects: "45+", clients: "30+", edits: "120+", uptime: "99.9%" };
+            document.getElementById('stat-projects').innerText = stats.projects;
+            document.getElementById('stat-clients').innerText = stats.clients;
+            document.getElementById('stat-edits').innerText = stats.edits;
+            document.getElementById('stat-uptime').innerText = stats.uptime;
+            
+            if(document.getElementById('stat-p-input')) {
+                document.getElementById('stat-p-input').value = stats.projects;
+                document.getElementById('stat-c-input').value = stats.clients;
+                document.getElementById('stat-e-input').value = stats.edits;
+                document.getElementById('stat-u-input').value = stats.uptime;
+            }
+        }
+
+        function handleUpdateSocials(event) {
+            event.preventDefault();
+            let socials = {
+                tg: document.getElementById('soc-tg').value,
+                ig: document.getElementById('soc-ig').value
+    
