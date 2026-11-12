@@ -288,14 +288,14 @@
             gap: 6px;
         }
 
-        /* Admin Panel Modal / Section */
+        /* Admin Panel Section */
         #admin-panel {
             display: none;
             background: #11161d;
             border: 2px dashed var(--accent-glow);
             border-radius: 16px;
             padding: 40px;
-            margin-top: 40px;
+            margin-bottom: 50px;
         }
 
         .admin-header {
@@ -311,6 +311,7 @@
             display: flex;
             gap: 15px;
             margin-bottom: 30px;
+            flex-wrap: wrap;
         }
 
         .tab-btn {
@@ -407,7 +408,7 @@
             font-size: 0.9rem;
         }
 
-        /* Login Modal */
+        /* Login Modal Overlay */
         .login-overlay {
             position: fixed;
             top: 0;
@@ -501,9 +502,9 @@
             </div>
 
             <div class="admin-tabs">
-                <button class="tab-btn active" onclick="switchTab('projects-tab')">Manage Projects & Proofs</button>
-                <button class="tab-btn" onclick="switchTab('stats-tab')">Update Stats</button>
-                <button class="tab-btn" onclick="switchTab('socials-tab')">Social Media Handlers</button>
+                <button class="tab-btn active" onclick="switchTab('projects-tab', event)">Manage Projects & Proofs</button>
+                <button class="tab-btn" onclick="switchTab('stats-tab', event)">Update Stats</button>
+                <button class="tab-btn" onclick="switchTab('socials-tab', event)">Social Media Handlers</button>
             </div>
 
             <!-- Tab 1: Add Project / Proof -->
@@ -581,7 +582,7 @@
 
         <!-- Dynamic Projects Grid -->
         <div class="projects-grid" id="projects-container">
-            <!-- Dynamically populated from localStorage -->
+            <!-- Projects loaded via JS -->
         </div>
     </section>
 
@@ -593,7 +594,7 @@
             <a href="#" id="contact-email-btn" class="btn btn-primary"><i class="fas fa-envelope"></i> Send an Email</a>
             
             <div class="social-icons" id="social-icons-container">
-                <!-- Dynamically populated social links -->
+                <!-- Dynamically loaded social icons -->
             </div>
         </div>
     </section>
@@ -610,4 +611,4 @@
             <form onsubmit="verifyAdminLogin(event)">
                 <div class="admin-form-group">
                     <label>Admin Passcode</label>
-                    <input type="password" id
+            
