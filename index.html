@@ -42,7 +42,7 @@
             top: 0;
             left: 0;
             width: 100%;
-            background: rgba(13, 17, 23, 0.9);
+            background: rgba(13, 17, 23, 0.95);
             backdrop-filter: blur(10px);
             display: flex;
             justify-content: space-between;
@@ -85,9 +85,17 @@
         .admin-nav-btn {
             background: rgba(0, 255, 204, 0.1);
             color: var(--accent-glow) !important;
-            padding: 6px 14px;
+            padding: 8px 16px;
             border-radius: 6px;
             border: 1px solid rgba(0, 255, 204, 0.3);
+        }
+
+        /* Mobile Menu Toggle Button */
+        .menu-toggle {
+            display: none;
+            cursor: pointer;
+            font-size: 1.5rem;
+            color: var(--text-heading);
         }
 
         /* Hero Section */
@@ -97,7 +105,7 @@
             align-items: center;
             justify-content: space-between;
             padding: 0 8%;
-            padding-top: 80px;
+            padding-top: 100px;
             gap: 50px;
         }
 
@@ -139,6 +147,7 @@
         .btn-group {
             display: flex;
             gap: 15px;
+            flex-wrap: wrap;
         }
 
         .btn {
@@ -185,7 +194,7 @@
 
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
             gap: 30px;
             text-align: center;
         }
@@ -223,7 +232,7 @@
         /* Projects & Proofs Grid */
         .projects-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 30px;
         }
 
@@ -294,7 +303,7 @@
             background: #11161d;
             border: 2px dashed var(--accent-glow);
             border-radius: 16px;
-            padding: 40px;
+            padding: 30px;
             margin-bottom: 50px;
         }
 
@@ -305,6 +314,8 @@
             margin-bottom: 30px;
             border-bottom: 1px solid var(--border-color);
             padding-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 15px;
         }
 
         .admin-tabs {
@@ -376,6 +387,7 @@
             justify-content: center;
             gap: 20px;
             margin-top: 30px;
+            flex-wrap: wrap;
         }
 
         .social-icons a {
@@ -421,12 +433,13 @@
             justify-content: center;
             align-items: center;
             z-index: 2000;
+            padding: 20px;
         }
 
         .login-box {
             background: var(--card-bg);
             border: 1px solid var(--border-color);
-            padding: 40px;
+            padding: 30px;
             border-radius: 12px;
             width: 100%;
             max-width: 400px;
@@ -438,6 +451,42 @@
             margin-bottom: 20px;
             text-align: center;
         }
+
+        /* Responsive Design for Mobile */
+        @media (max-width: 768px) {
+            header {
+                padding: 15px 5%;
+            }
+            .menu-toggle {
+                display: block;
+            }
+            nav ul {
+                position: absolute;
+                top: 70px;
+                left: 0;
+                width: 100%;
+                background: rgba(13, 17, 23, 0.98);
+                flex-direction: column;
+                align-items: center;
+                padding: 20px 0;
+                border-bottom: 1px solid var(--border-color);
+                display: none;
+            }
+            nav ul.active {
+                display: flex;
+            }
+            .hero {
+                flex-direction: column;
+                text-align: center;
+                padding-top: 120px;
+            }
+            .hero h1 {
+                font-size: 2.3rem;
+            }
+            .btn-group {
+                justify-content: center;
+            }
+        }
     </style>
 </head>
 <body>
@@ -445,12 +494,15 @@
     <!-- Header -->
     <header>
         <div class="logo">devloperlab<span>.in</span></div>
+        <div class="menu-toggle" onclick="toggleMenu()">
+            <i class="fas fa-bars" id="menu-icon"></i>
+        </div>
         <nav>
-            <ul>
-                <li><a href="#about">About</a></li>
-                <li><a href="#projects">Projects & Proofs</a></li>
-                <li><a href="#contact">Contact</a></li>
-                <li><a href="#" onclick="openLoginModal()" class="admin-nav-btn"><i class="fas fa-lock"></i> Admin</a></li>
+            <ul id="nav-links">
+                <li><a href="#about" onclick="toggleMenu()">About</a></li>
+                <li><a href="#projects" onclick="toggleMenu()">Projects & Proofs</a></li>
+                <li><a href="#contact" onclick="toggleMenu()">Contact</a></li>
+                <li><a href="#" onclick="openLoginModal(); toggleMenu();" class="admin-nav-btn"><i class="fas fa-lock"></i> Admin</a></li>
             </ul>
         </nav>
     </header>
@@ -497,14 +549,14 @@
         <!-- Admin Dashboard Container (Hidden by default) -->
         <div id="admin-panel">
             <div class="admin-header">
-                <h2>🛠️ Admin Dashboard (devloperlab.in)</h2>
+                <h2>🛠️ Admin Dashboard</h2>
                 <button class="btn btn-secondary" onclick="closeAdminPanel()">Close Admin</button>
             </div>
 
             <div class="admin-tabs">
-                <button class="tab-btn active" onclick="switchTab('projects-tab', event)">Manage Projects & Proofs</button>
+                <button class="tab-btn active" onclick="switchTab('projects-tab', event)">Manage Projects</button>
                 <button class="tab-btn" onclick="switchTab('stats-tab', event)">Update Stats</button>
-                <button class="tab-btn" onclick="switchTab('socials-tab', event)">Social Media Handlers</button>
+                <button class="tab-btn" onclick="switchTab('socials-tab', event)">Social Handlers</button>
             </div>
 
             <!-- Tab 1: Add Project / Proof -->
@@ -513,7 +565,7 @@
                 <form id="add-project-form" onsubmit="handleAddNewProject(event)" style="margin-top: 15px;">
                     <div class="admin-form-group">
                         <label>Category / Tag</label>
-                        <input type="text" id="p-tag" placeholder="e.g. Python / Telegram Bot or Video Editing" required>
+                        <input type="text" id="p-tag" placeholder="e.g. Python / Telegram Bot" required>
                     </div>
                     <div class="admin-form-group">
                         <label>Project Title</label>
@@ -521,11 +573,11 @@
                     </div>
                     <div class="admin-form-group">
                         <label>Description & Details</label>
-                        <textarea id="p-desc" rows="3" placeholder="Describe the work and proof details..." required></textarea>
+                        <textarea id="p-desc" rows="3" placeholder="Describe the work..." required></textarea>
                     </div>
                     <div class="admin-form-group">
                         <label>Proof / Live Link (URL)</label>
-                        <input type="url" id="p-link" placeholder="https://t.me/... or https://github.com/..." required>
+                        <input type="url" id="p-link" placeholder="https://t.me/..." required>
                     </div>
                     <button type="submit" class="btn btn-primary">Publish Project / Proof</button>
                 </form>
@@ -537,19 +589,19 @@
                 <form id="update-stats-form" onsubmit="handleUpdateStats(event)" style="margin-top: 15px;">
                     <div class="admin-form-group">
                         <label>Completed Projects Count</label>
-                        <input type="text" id="stat-p-input" value="45+" required>
+                        <input type="text" id="stat-p-input" required>
                     </div>
                     <div class="admin-form-group">
                         <label>Happy Clients Count</label>
-                        <input type="text" id="stat-c-input" value="30+" required>
+                        <input type="text" id="stat-c-input" required>
                     </div>
                     <div class="admin-form-group">
                         <label>Reels & Edits Delivered</label>
-                        <input type="text" id="stat-e-input" value="120+" required>
+                        <input type="text" id="stat-e-input" required>
                     </div>
                     <div class="admin-form-group">
                         <label>Bot Uptime Rate</label>
-                        <input type="text" id="stat-u-input" value="99.9%" required>
+                        <input type="text" id="stat-u-input" required>
                     </div>
                     <button type="submit" class="btn btn-primary">Save Stats</button>
                 </form>
@@ -560,55 +612,24 @@
                 <h3>Manage Social Media Handlers</h3>
                 <form id="update-socials-form" onsubmit="handleUpdateSocials(event)" style="margin-top: 15px;">
                     <div class="admin-form-group">
-                        <label><i class="fab fa-telegram-plane"></i> Telegram Profile / Group Link</label>
-                        <input type="url" id="soc-tg" placeholder="https://t.me/yourusername" required>
+                        <label><i class="fab fa-telegram-plane"></i> Telegram Link</label>
+                        <input type="url" id="soc-tg" required>
                     </div>
                     <div class="admin-form-group">
-                        <label><i class="fab fa-instagram"></i> Instagram Profile Link</label>
-                        <input type="url" id="soc-ig" placeholder="https://instagram.com/yourusername" required>
+                        <label><i class="fab fa-instagram"></i> Instagram Link</label>
+                        <input type="url" id="soc-ig" required>
                     </div>
                     <div class="admin-form-group">
-                        <label><i class="fab fa-whatsapp"></i> WhatsApp Direct Link</label>
-                        <input type="url" id="soc-wp" placeholder="https://wa.me/91yournumber" required>
+                        <label><i class="fab fa-whatsapp"></i> WhatsApp Link</label>
+                        <input type="url" id="soc-wp" required>
                     </div>
                     <div class="admin-form-group">
-                        <label><i class="fab fa-github"></i> GitHub Profile Link</label>
-                        <input type="url" id="soc-gh" placeholder="https://github.com/yourusername" required>
+                        <label><i class="fab fa-github"></i> GitHub Link</label>
+                        <input type="url" id="soc-gh" required>
                     </div>
                     <button type="submit" class="btn btn-primary">Save Social Handlers</button>
                 </form>
             </div>
         </div>
 
-        <!-- Dynamic Projects Grid -->
-        <div class="projects-grid" id="projects-container">
-            <!-- Projects loaded via JS -->
-        </div>
-    </section>
-
-    <!-- Contact Section -->
-    <section id="contact">
-        <div class="contact-container">
-            <h2 class="section-title">Let's Build <span>Together</span></h2>
-            <p>Ready to deploy a custom Python bot, automate workflows, or edit high-retention content under <b>devloperlab.in</b>? Reach out directly!</p>
-            <a href="#" id="contact-email-btn" class="btn btn-primary"><i class="fas fa-envelope"></i> Send an Email</a>
-            
-            <div class="social-icons" id="social-icons-container">
-                <!-- Dynamically loaded social icons -->
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer>
-        <p>&copy; 2026 devloperlab.in. All rights reserved.</p>
-    </footer>
-
-    <!-- Login Modal -->
-    <div class="login-overlay" id="loginModal">
-        <div class="login-box">
-            <h3>🔐 Admin Authentication</h3>
-            <form onsubmit="verifyAdminLogin(event)">
-                <div class="admin-form-group">
-                    <label>Admin Passcode</label>
-            
+        <!-- Dynami
