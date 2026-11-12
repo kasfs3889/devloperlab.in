@@ -650,7 +650,11 @@
         <div class="contact-container">
             <h2 class="section-title">Let's Build <span>Together</span></h2>
             <p>Ready to deploy a custom Python bot or edit high-retention content under <b>devloperlab.in</b>? Reach out directly!</p>
-            <a href="#" id="contact-email-btn" class="btn btn-primary"><i class="fas fa-envelope"></i> Send an Email</a>
+            
+            <!-- Send Email Button with Pre-filled Draft -->
+            <a href="mailto:devloperlab.in@gmail.com?subject=Project Inquiry - Python Script&body=HEY%2C%20SATUROO%20I%20JUST%20CHECKED%20YOUR%20PORTFOLIO%20WEBSITE%20AND%20I%20ACTUALLY%20NEEDS%20A%20CLEAN%20PYTHON%20SCRIPTED%20SYSTEM" class="btn btn-primary">
+                <i class="fas fa-envelope"></i> Send an Email
+            </a>
             
             <div class="social-icons" id="social-icons-container"></div>
         </div>
@@ -796,7 +800,8 @@
 
             projects.forEach((p, index) => {
                 container.innerHTML += `
-                    <div class="project-card">
+                    <div class="project-card
+                    ">
                         <div class="project-info">
                             <span class="project-tag">${p.tag}</span>
                             <h3>${p.title}</h3>
@@ -897,5 +902,4 @@
         }
     </script>
 </body>
-                                                                                                                        </html>
-    
+</html>
