@@ -555,7 +555,7 @@
     <section id="projects">
         <h2 class="section-title">Completed Projects & <span>Proofs</span></h2>
         
-        <!-- Admin Dashboard Container (Hidden by default) -->
+        <!-- Admin Dashboard Container -->
         <div id="admin-panel">
             <div class="admin-header">
                 <h2>🛠️ Admin Dashboard</h2>
@@ -568,7 +568,7 @@
                 <button class="tab-btn" onclick="switchTab('socials-tab', event)">Social Handlers</button>
             </div>
 
-            <!-- Tab 1: Add Project / Proof -->
+            <!-- Tab 1: Add Project -->
             <div id="projects-tab" class="admin-tab-content">
                 <h3>Add New Project & Proof</h3>
                 <form id="add-project-form" onsubmit="handleAddNewProject(event)" style="margin-top: 15px;">
@@ -632,12 +632,12 @@
                         <label><i class="fab fa-whatsapp"></i> WhatsApp Link</label>
                         <input type="url" id="soc-wp" required>
                     </div>
-            <div class="admin-form-group">
-        <label><i class="fab fa-github"></i> GitHub Link</label>
-        <input type="url" id="soc-gh" required>
-    </div>
-    <button type="submit" class="btn btn-primary">Save Social Handlers</button>
-</form>
+                    <div class="admin-form-group">
+                        <label><i class="fab fa-github"></i> GitHub Link</label>
+                        <input type="url" id="soc-gh"="url" id="soc-gh" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save Social Handlers</button>
+                </form>
             </div>
         </div>
 
@@ -702,47 +702,20 @@
             gh: "https://github.com/yourusername"
         };
 
-        document.addEventListener("DOMContentLoaded", function() {
-            const menuToggleBtn = document.getElementById('menuToggleBtn');
+        function toggleMenu() {
             const navLinks = document.getElementById('nav-links');
+            const icon = document.getElementById('menu-icon');
             
-            if(menuToggleBtn && navLinks) {
-                menuToggleBtn.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    navLinks.classList.toggle('active');
-                    const icon = document.getElementById('menu-icon');
-                    if(navLinks.classList.contains('active')) {
-                        icon.classList.remove('fa-bars');
-                        icon.classList.add('fa-times');
-                    } else {
-                        icon.classList.remove('fa-times');
-                        icon.classList.add('fa-bars');
-                    }
-                });
-
-                document.querySelectorAll('.nav-link-item').forEach(item => {
-                    item.addEventListener('click', () => {
-                        navLinks.classList.remove('active');
-                        document.getElementById('menu-icon').classList.remove('fa-times');
-                        document.getElementById('menu-icon').classList.add('fa-bars');
-                    });
-                });
+            navLinks.classList.toggle('active');
+            
+            if(navLinks.classList.contains('active')) {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times');
+            } else {
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
             }
-
-            const adminBtn = document.getElementById('adminBtn');
-            if(adminBtn) {
-                adminBtn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    if(navLinks) navLinks.classList.remove('active');
-                    openLoginModal();
-                });
-            }
-
-            renderProjects();
-            updateStatsUI();
-            renderSocials();
-        });
+        }
 
         function openLoginModal() {
             const modal = document.getElementById('loginModal');
@@ -750,6 +723,34 @@
                 modal.style.display = 'flex';
             }
         }
+
+        window.onload = function() {
+            const menuBtn = document.getElementById('menuToggleBtn');
+            if(menuBtn) {
+                menuBtn.onclick = toggleMenu;
+            }
+
+            const adminBtn = document.getElementById('adminBtn');
+            if(adminBtn) {
+                adminBtn.onclick = function(e) {
+                    e.preventDefault();
+                    const navLinks = document.getElementById('nav-links');
+                    if(navLinks) navLinks.classList.remove('active');
+                    openLoginModal();
+                };
+            }
+
+            document.querySelectorAll('.nav-link-item').forEach(item => {
+                item.onclick = function() {
+                    document.getElementById('nav-links').classList.remove('active');
+                    document.getElementById('menu-icon').className = "fas fa-bars";
+                };
+            });
+
+            renderProjects();
+            updateStatsUI();
+            renderSocials();
+        };
 
         function closeLoginModal() {
             const modal = document.getElementById('loginModal');
@@ -867,5 +868,34 @@
             event.preventDefault();
             let socials = {
                 tg: document.getElementById('soc-tg').value,
-                ig: document.getElementById('soc-ig').value
+                ig: document.getElementById('soc-ig').value,
+                wp: document.getElementById('soc-wp').value,
+                gh: document.getElementById('soc-gh').value
+            };
+            localStorage.setItem('dev_socials', JSON.stringify(socials));
+            renderSocials();
+            alert('Social handlers updated successfully!');
+        }
+
+        function renderSocials() {
+            let socials = JSON.parse(localStorage.getItem('dev_socials')) || defaultSocials;
+            let container = document.getElementById('social-icons-container');
+            if(!container) return;
+            container.innerHTML = `
+                <a href="${socials.tg}" target="_blank" title="Telegram"><i class="fab fa-telegram-plane"></i></a>
+                <a href="${socials.ig}" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
+                <a href="${socials.wp}" target="_blank" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                <a href="${socials.gh}" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>
+            `;
+
+            if(document.getElementById('soc-tg')) {
+                document.getElementById('soc-tg').value = socials.tg;
+                document.getElementById('soc-ig').value = socials.ig;
+                document.getElementById('soc-wp').value = socials.wp;
+                document.getElementById('soc-gh').value = socials.gh;
+            }
+        }
+    </script>
+</body>
+                                                                                                                        </html>
     
