@@ -88,6 +88,7 @@
             padding: 8px 16px;
             border-radius: 6px;
             border: 1px solid rgba(0, 255, 204, 0.3);
+            cursor: pointer;
         }
 
         /* Mobile Menu Toggle Button */
@@ -427,12 +428,12 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(13, 17, 23, 0.9);
+            background: rgba(13, 17, 23, 0.95);
             backdrop-filter: blur(8px);
             display: none;
             justify-content: center;
             align-items: center;
-            z-index: 2000;
+            z-index: 9999;
             padding: 20px;
         }
 
@@ -502,7 +503,7 @@
                 <li><a href="#about" onclick="toggleMenu()">About</a></li>
                 <li><a href="#projects" onclick="toggleMenu()">Projects & Proofs</a></li>
                 <li><a href="#contact" onclick="toggleMenu()">Contact</a></li>
-                <li><a href="#" onclick="openLoginModal(); toggleMenu();" class="admin-nav-btn"><i class="fas fa-lock"></i> Admin</a></li>
+                <li><a id="adminBtn" class="admin-nav-btn"><i class="fas fa-lock"></i> Admin</a></li>
             </ul>
         </nav>
     </header>
@@ -632,4 +633,4 @@
             </div>
         </div>
 
-        <!-- Dynami
+        <!-- Dynamic Proje
